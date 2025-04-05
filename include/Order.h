@@ -1,33 +1,46 @@
 #ifndef ORDER_H
 #define ORDER_H
+#pragma once
 
+#include <stdexcept>  // For exception handling
 #include <iostream>
 #include <chrono>
 #include "OrderTypes.h"
-class Order {
+
+
+class BaseOrder {
 public:
-    Order(double getPrice, int getQuantity, const TimePoint& timePoint, OrderType type);
-    Order(double getPrice, int getQuantity, OrderType type);
+    using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+    using TimeStamp = std::time_t;
+    BaseOrder(int quantity, const TimePoint& timePoint, OrderType type, Side side, TIF tif = TIF::GTC);
+    BaseOrder(int quantity, OrderType type, Side side, TIF tif);
 
     // Delete copy constructor and copy assignment operator
-    Order(const Order&) = delete;
-    Order& operator=(const Order&) = delete;
+    BaseOrder(const BaseOrder&) = delete;
+    BaseOrder& operator=(const BaseOrder&) = delete;
+
+    // move
+    BaseOrder(BaseOrder&&) = default;
+    BaseOrder& operator=(BaseOrder&&) = default;
 
     // Getters
-    double getPrice() const;
     int getQuantity() const;
-    TimeStamp getTimeStamp() const;
+    TimePoint getTimePoint() const;
     OrderType getOrderType() const;
+    TIF getTifType() const;
+    Side getSide() const;
+    std::string printOrderType() const;
 
     // Modifiers
     void changeQuantity(int quantityDelta);
     void setOrderType(OrderType type);
 
 private:
-    double _price;
     int _quantity;
-    TimeStamp _timeStamp;
+    TimePoint _timePoint;
     OrderType _orderType;
+    Side _side;
+    TIF _tif;
 };
 
 #endif // ORDER_H

@@ -1,3 +1,5 @@
+#pragma once 
+
 enum OrderType {
 	LIMIT,
 	MARKET,
@@ -7,4 +9,10 @@ enum OrderType {
 enum Side {
 	BUY,
 	SELL,
+};
+
+enum TIF {
+	GTC,
+	FOK,
+	IOC,
 };
